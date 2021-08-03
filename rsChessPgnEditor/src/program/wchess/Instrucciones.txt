@@ -1,0 +1,293 @@
+mod wchess;
+/*
+use wchess::data;
+use wchess::board;
+use wchess::globs;
+use wchess::movim;
+use wchess::displaymove;
+use wchess::perft;
+use wchess::legalmoves as legals;
+*/
+
+
+fn main() {
+/*
+	data::data_init();
+	let mut board = board::Board::new();
+	board.setup_fen(globs::DEFAULT_POSITION.to_string());
+	//println!("occupied_squares {:b}", board.occupied_squares);
+	board.display();
+	board.get_fen();
+	//board.view_rotated = !board.view_rotated;
+	//board.display();
+	//data::info(board.clone());
+	//board.view_rotated = !board.view_rotated;
+	//board.setup_fen("rq2r1k1/5pp1/p7/4bNP1/1p2P2P/5Q2/PP4K1/5R1R w - - 0 1".to_string());
+	//board.display();
+*/
+/*
+	movim::mov_white_oo_castle();
+	movim::mov_black_oo_castle();
+	movim::mov_white_ooo_castle();
+	movim::mov_black_ooo_castle();
+*/
+/*
+	board.next_move = 1;	// mueven negras
+	// generacion de movimientos
+	board.move_buf_len[0] = 0;
+    board.move_buf_len[1] = board.movegen(board.move_buf_len[0]) as i32;
+
+	println!( "pseudo-legal moves from this position:" );
+	//for (i = board.moveBufLen[0]; i < board.moveBufLen[1]; i++)
+	for i in board.move_buf_len[0]..board.move_buf_len[1]  {
+				print!("{}. ", i+1);
+				//println!("mov {:?}", board.move_buffer[i as usize]);
+				let move_san = displaymove::display_move(board.move_buffer[i as usize]);
+				println!("{}", move_san);
+	}
+*/
+	//perft::perft_test(5, &mut board);
+	/*
+estamos en el capitulo 7
+	*/
+/*
+	/* LEGAL MOVES */
+	board.move_buf_len[0] = 0;
+    board.move_buf_len[1] = board.movegen(board.move_buf_len[0]) as i32;
+
+	// TODO
+	// if length of array of legal moves == 0, then is Mate or StaleMated
+	println!( "legal moves from this position:" );
+	for i in board.move_buf_len[0]..board.move_buf_len[1]  {
+		board.make_move(board.move_buffer[i as usize]);
+		let vfen = board.get_fen();
+		println!("{}", vfen);
+		if board.is_other_king_attacked() {
+			board.unmake_move(board.move_buffer[i as usize]);
+		}
+		else {
+			print!("{}. ", i+1);
+			//let move_san = displaymove::get_san_ambig (board.move_buffer[i as usize]);
+			let jug = board.move_buffer[i as usize];
+			//let move_san = displaymove::get_san_disambig(&mut board, jug);
+			let move_uci = board.move_buffer[i as usize].get_uci();
+			//println!("{} - {}", move_san, move_uci);
+			board.unmake_move(board.move_buffer[i as usize]);
+
+			// la san desambiguada se tiene que hacer des pues de deshacer la jugada
+			// porque vuelve a recalcular movegen
+			let move_san = displaymove::get_san_disambig(&mut board, jug);
+			println!("{} - {}", move_san, move_uci);
+		}
+	}
+	board.display();
+
+
+	// VER ESTADOS DEL ENROQUE
+	println!("enroques blancos: {}", board.castle_white);
+	println!("enroques negros: {}", board.castle_black);
+	/*
+		cada bando:
+		puede solo corto = 1
+		puede solo largo = 2
+		puede ambos = 1+2 = 3
+	*/
+
+	let vfen = board.get_fen();
+	println!("{}", vfen);
+
+	println!("OTRAS POSICIONES\n");
+	// ahora diferentes posiciones
+	board.setup_fen("rr4k1/4b1pp/3p1p2/6P1/n1B1PpRP/1N3P2/1PP5/1K1R4 b - - 1 28".to_string());
+	board.display();
+
+	// obtenemos la fen
+	let vfen = board.get_fen();
+	println!("{}", vfen);
+
+	// comprobacion jaque en rey propio
+	let jaque_propio = board.is_own_king_attacked();
+	println!("jaque propio : {}", jaque_propio);
+
+	// comprobacion jaque en rey contraio
+	let jaque_contrario = board.is_other_king_attacked();
+	println!("jaque contrario : {}", jaque_contrario);
+*/
+	// LEGAL MOVES
+	//let mut board = board::Board::new();
+	//board.setup_fen(globs::DEFAULT_POSITION.to_string());
+/*
+	let legales = legals::get_legals(&mut board);
+
+	for mov in legales {
+		println!("{}", mov.uci);
+	}
+*/
+/*
+	legals::make_uci_move(&mut board, "e2e4");
+	// mostramos el tablero
+	board.display();
+	// obtenemos la fen
+	let vfen = board.get_fen();
+	println!("{}", vfen);
+*/
+/*
+	// probar una partida terminada
+	println!("PARTIDA TERMINADA");
+	let mut board = board::Board::new();
+	board.setup_fen("8/8/5k2/8/8/4K3/8/6BB w - - 0 1".to_string());
+	board.display();
+
+	let valid: legals::LegalMove = legals::make_uci_move(&mut board, "e3f2");
+	if valid.movim.move_int != 0 {
+		// mostramos el tablero
+		board.display();
+		// obtenemos la fen
+		let vfen = board.get_fen();
+		println!("{}", vfen);
+		println!("{}", valid.san);
+		println!("--{}", valid.uci);
+	}
+	else {
+		println!("Ended game or invalid move");
+	}
+
+
+	// movimiento san
+	println!("MOVIMIENTO CON SAN");
+	let mut board = board::Board::new();
+	board.setup_fen("r2q1rk1/3nbppp/3p4/3Qp1Pn/p3P3/1p2BP1B/PPPN3P/2KR2R1 w - - 0 18".to_string());
+	//println!("occupied_squares {:b}", board.occupied_squares);
+	board.display();
+	board.get_fen();
+
+	let valid = legals::make_san_move(&mut board, "axb3");
+	if valid.movim.move_int != 0 {
+		// mostramos el tablero
+		board.display();
+		// obtenemos la fen
+		let vfen = board.get_fen();
+		println!("{}", vfen);
+		println!("{}", valid.san);
+		println!("--{}", valid.uci);
+	}
+	else {
+		println!("Ended game or invalid move");
+	}
+
+
+	// parseamos una partida enter
+
+	let partida: Vec<&str> = vec![
+		"d4", "Nf6", "c4", "e6", "Nc3", "d5", "cxd5", "exd5", "Bg5", "c6", "e3", "Bf5", "Qf3", "Bg6",
+		"Bxf6", "Qxf6", "Qxf6", "gxf6", "Nf3", "Nd7", "O-O-O", "Nb6", "Bd3", "Bb4", "Nh4", "Nc8",
+		"Ne2", "Nd6", "Ng3", "O-O-O", "Nhf5", "Nxf5", "Nxf5", "Bxf5", "Bxf5+", "Kc7", "h4", "h6",
+		"h5", "a5", "Rd3", "a4", "a3", "Be7", "Re1", "Rhe8", "Kc2", "Bd6", "Rc1", "Ra8"
+	];
+
+	let mut board = board::Board::new();
+	board.setup_fen(globs::DEFAULT_POSITION.to_string());
+
+	for jugada in partida {
+		let valid = legals::make_san_move(&mut board, jugada);
+		if valid.movim.move_int != 0 {
+			// mostramos el tablero
+			//board.display();
+			// obtenemos la fen
+			//let vfen = board.get_fen();
+			//println!("{}", vfen);
+			println!("san: {}\t\tuci: {}", valid.san, valid.uci);
+			//println!("--{}", valid.uci);
+		}
+		else {
+			print! ("jugada: {}", jugada);
+			panic!("error Ended game or invalid move");
+		}
+	}
+*/
+
+	let mut board = wchess::new_board();
+	wchess::set_fen(&mut board, wchess::globs::DEFAULT_POSITION);
+	let vfen: String = wchess::get_fen(&mut board);
+	println!("{}", vfen);
+	wchess::draw_board(&mut board);
+
+	// one white move
+	let mov: wchess::legalmoves::LegalMove = 
+			wchess::move_uci(&mut board, "d2d4");
+	if mov.movim.move_int != 0 {
+		let vfen = wchess::get_fen(&mut board);
+		println!("{}", vfen);
+		println!("san: {}\t\tuci: {}", mov.san, mov.uci);
+	}
+	else {
+		panic!("error Ended game or invalid move");
+	}
+
+	// other black move
+	let mov: wchess::legalmoves::LegalMove = 
+			wchess::move_san(&mut board, "Nf6");
+	if mov.movim.move_int != 0 {
+		let vfen = wchess::get_fen(&mut board);
+		println!("{}", vfen);
+		println!("san: {}\t\tuci: {}", mov.san, mov.uci);
+	}
+	else {
+		panic!("error Ended game or invalid move");
+	}
+
+	wchess::draw_board(&mut board);
+
+	// undo last move
+	wchess::undo_move(&mut board, mov);
+
+	let vfen: String = wchess::get_fen(&mut board);
+	println!("{}", vfen);
+	wchess::draw_board(&mut board);
+
+	let end: bool = wchess::game_ended(&mut board);
+	println!("is game ended (no repetition 3 moves is considered) ? : {}", end);
+
+	// vamos a validar una partida
+	wchess::set_fen(&mut board, wchess::globs::DEFAULT_POSITION);
+
+	let partida: Vec<&str> = vec![
+		"d4", "Nf6", "c4", "e6", "Nc3", "d5", "cxd5", "exd5", "Bg5", "c6", "e3", "Bf5", "Qf3", "Bg6",
+		"Bxf6", "Qxf6", "Qxf6", "gxf6", "Nf3", "Nd7", "O-O-O", "Nb6", "Bd3", "Bb4", "Nh4", "Nc8",
+		"Ne2", "Nd6", "Ng3", "O-O-O", "Nhf5", "Nxf5", "Nxf5", "Bxf5", "Bxf5+", "Kc7", "h4", "h6",
+		"h5", "a5", "Rd3", "a4", "a3", "Be7", "Re1", "Rhe8", "Kc2", "Bd6", "Rc1", "Ra8"
+	];
+
+	for jugada in partida {
+		let valid = wchess::move_san(&mut board, jugada);
+		if valid.movim.move_int != 0 {
+			println!("san: {}\t\tuci: {}", valid.san, valid.uci);
+		}
+		else {
+			println! ("error en movim: {}", jugada);
+			panic!("error Ended game or invalid move");
+		}
+	}
+	wchess::draw_board(&mut board);
+	let vfen: String = wchess::get_fen(&mut board);
+	println!("{}", vfen);
+
+	get_game(&mut board);
+}
+
+
+// this is only a possible example
+pub fn get_game(board: &mut wchess::board::Board) {
+    for i in 0..board.game_line.len() {
+        if board.game_line[i].movim.move_int == 0 {
+            break; 
+        }
+        // the uci format
+        print!("{} ", board.game_line[i].movim.get_uci());
+        // san format
+        let mov = board.game_line[i].movim;
+        let san = wchess::displaymove::get_san_ambig (mov); // no disambiguation
+        print!("({}) ", san);
+    }
+}
+
