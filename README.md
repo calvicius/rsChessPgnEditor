@@ -2,7 +2,9 @@
 
 Created with Rustc and GTK3+
 
-Arranged some little bugs:
+>Added Book opening reader (polyglot format) (jan 2022)
+
+>Arranged some little bugs: (aug 2021)
 
 When a comment of game starts with [Black has ... etc; and produces problems with standard header ([Black "Petrosian"]). For instance
 
