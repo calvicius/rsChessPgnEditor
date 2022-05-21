@@ -183,13 +183,13 @@ pub fn get_san_disambig (board: &mut Board, movim: movim::Movim) -> String {
             //return "O-O-O".to_string();
             if check {
                 if mate {
-                    return "O-O#".to_string();
+                    return "O-O-O#".to_string();
                 }
                 else {
-                    return "O-O+".to_string();
+                    return "O-O-O+".to_string();
                 }
             }
-            else { return "O-O".to_string(); }
+            else { return "O-O-O".to_string(); }
         };
         if (movim.get_piec() == gl::BLACK_KING as u32) && (movim.is_castle_oo()) {
             //return "O-O".to_string();
@@ -207,13 +207,13 @@ pub fn get_san_disambig (board: &mut Board, movim: movim::Movim) -> String {
             //return "O-O-O".to_string();
             if check {
                 if mate {
-                    return "O-O#".to_string();
+                    return "O-O-O#".to_string();
                 }
                 else {
-                    return "O-O+".to_string();
+                    return "O-O-O+".to_string();
                 }
             }
-            else { return "O-O".to_string(); }
+            else { return "O-O-O".to_string(); }
         };
         // start building the string
         if !movim.is_pawn_move() {
